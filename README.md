@@ -73,7 +73,7 @@ If the route doesn't match, the return value of `VanGestelJasper\Router\Router->
 
 The request data will be read as JSON. If it succeeds, you will be able to access on the `Route` -> `Request` -> `Payload` object.
 
-See the result example above.
+See the example result below.
 
 **_Note:_** The wildcards defined in routes between `{` and `}` will be accessable on the `Route` -> `Request` -> `Payload` object as well.
 
