@@ -1,0 +1,24 @@
+{
+  "name": "vangesteljasper/Router",
+  "description": "Very simple router for just about anything.",
+  "license": "MIT",
+  "keywords": [
+    "router"
+  ],
+  "authors": [
+    {
+      "name": "Van Gestel Jasper",
+      "email": "vgesteljasper@gmail.com"
+    }
+  ],
+  "require": {},
+  "require-dev": {
+    "phpunit/phpunit": "^7.0",
+    "ducks-project/apache": "^1.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "VanGestelJasper\\Router\\": "src"
+    }
+  }
+}
