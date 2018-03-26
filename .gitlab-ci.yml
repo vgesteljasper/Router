@@ -9,11 +9,18 @@ before_script:
   - apt-get install git -yqq
 
   - curl -sS https://getcomposer.org/installer | php
+  - curl -O http://get.sensiolabs.org/sami.phar
+
   - php composer.phar install
 
 stages:
   - test
+  - build-docs
 
 test:
   script:
     - vendor/bin/phpunit --configuration config/phpunit.xml
+
+build-docs:
+  script:
+    - php sami.phar update config/sami-config.php
