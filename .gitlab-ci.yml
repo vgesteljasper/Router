@@ -15,14 +15,14 @@ before_script:
 
 stages:
 - test
-- build-docs
+- docs
 - pages
 
 test:
   script:
   - ./vendor/bin/phpunit --configuration ./config/phpunit.xml
 
-build-docs:
+docs:
   script:
   - php ./sami.phar update ./config/sami-config.php
   artifacts:
@@ -32,6 +32,7 @@ build-docs:
 
 pages:
   script:
+  - mkdir -p ./public
   - cp -r ./docs ./public
   artifacts:
     paths:
