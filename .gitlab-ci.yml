@@ -33,7 +33,7 @@ docs:
 pages:
   script:
   - mkdir -p ./public
-  - cp ./docs ./public
+  - cp ./docs/* ./public/
   artifacts:
     paths:
     - public
