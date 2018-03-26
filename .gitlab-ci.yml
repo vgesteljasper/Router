@@ -5,22 +5,34 @@ cache:
   - vendor/
 
 before_script:
-  - apt-get update -yqq
-  - apt-get install git -yqq
+- apt-get update -yqq
+- apt-get install git -yqq
 
-  - curl -sS https://getcomposer.org/installer | php
-  - curl -O http://get.sensiolabs.org/sami.phar
+- curl -sS https://getcomposer.org/installer | php
+- curl -O http://get.sensiolabs.org/sami.phar
 
-  - php composer.phar install
+- php composer.phar install
 
 stages:
-  - test
-  - build-docs
+- test
+- build-docs
+- pages
 
 test:
   script:
-    - vendor/bin/phpunit --configuration config/phpunit.xml
+  - ./vendor/bin/phpunit --configuration ./config/phpunit.xml
 
 build-docs:
   script:
-    - php sami.phar update config/sami-config.php
+  - php ./sami.phar update ./config/sami-config.php
+  artifacts:
+    paths:
+    - docs
+    expire_in: 20 minutes
+
+pages:
+  script:
+  - cp -r ./docs ./public
+  artifacts:
+    paths:
+    - public
