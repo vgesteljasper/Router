@@ -25,6 +25,7 @@ test:
 docs:
   script:
     - php ./sami.phar update ./config/sami-config.php
+    - ls -lha
   artifacts:
     paths:
       - docs
@@ -34,7 +35,7 @@ pages:
   script:
     - mkdir -p ./public
     - ls -lha
-    - cp ./docs/* ./public/
+    - cp ./docs/ ./public/
   artifacts:
     paths:
       - public
