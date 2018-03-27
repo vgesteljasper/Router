@@ -34,8 +34,6 @@ pages:
   script:
     - mkdir -p ./public
     - cp ./docs/* ./public/
-  dependencies:
-    - docs
   artifacts:
     paths:
       - public
