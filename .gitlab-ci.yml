@@ -26,16 +26,13 @@ docs:
   script:
     - php ./sami.phar update ./config/sami-config.php
     - ls -lha
-  artifacts:
-    paths:
-      - docs
-    expire_in: 20 minutes
 
 pages:
   script:
-    - mkdir -p ./public
     - ls -lha
-    - cp ./docs/ ./public/
+    - mkdir .public
+    - cp -r ./docs/* .public
+    - mv .public public
   artifacts:
     paths:
       - public
