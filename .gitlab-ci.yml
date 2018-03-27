@@ -2,38 +2,40 @@ image: php:7.1
 
 cache:
   paths:
-  - vendor/
+    - vendor/
 
 before_script:
-- apt-get update -yqq
-- apt-get install git -yqq
+  - apt-get update -yqq
+  - apt-get install git -yqq
 
-- curl -sS https://getcomposer.org/installer | php
-- curl -O http://get.sensiolabs.org/sami.phar
+  - curl -sS https://getcomposer.org/installer | php
+  - curl -O http://get.sensiolabs.org/sami.phar
 
-- php composer.phar install
+  - php composer.phar install
 
 stages:
-- test
-- docs
-- pages
+  - test
+  - docs
+  - pages
 
 test:
   script:
-  - ./vendor/bin/phpunit --configuration ./config/phpunit.xml
+    - ./vendor/bin/phpunit --configuration ./config/phpunit.xml
 
 docs:
   script:
-  - php ./sami.phar update ./config/sami-config.php
+    - php ./sami.phar update ./config/sami-config.php
   artifacts:
     paths:
-    - docs
+      - docs
     expire_in: 20 minutes
 
 pages:
   script:
-  - mkdir -p ./public
-  - cp ./docs/* ./public/
+    - mkdir -p ./public
+    - cp ./docs/* ./public/
+  dependencies:
+    - docs
   artifacts:
     paths:
-    - public
+      - public
