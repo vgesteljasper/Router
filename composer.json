@@ -20,5 +20,6 @@
     "psr-4": {
       "VanGestelJasper\\Router\\": "src"
     }
-  }
+  },
+  "minimum-stability": "dev"
 }
