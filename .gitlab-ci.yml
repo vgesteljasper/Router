@@ -7,32 +7,12 @@ cache:
 before_script:
   - apt-get update -yqq
   - apt-get install git -yqq
-
   - curl -sS https://getcomposer.org/installer | php
-  - curl -O http://get.sensiolabs.org/sami.phar
-
   - php composer.phar install
 
 stages:
   - test
-  - docs
-  - pages
 
 test:
   script:
     - ./vendor/bin/phpunit --configuration ./config/phpunit.xml
-
-docs:
-  script:
-    - php ./sami.phar update ./config/sami-config.php
-    - ls -lha
-
-pages:
-  script:
-    - ls -lha
-    - mkdir .public
-    - cp -r ./docs/* .public
-    - mv .public public
-  artifacts:
-    paths:
-      - public
