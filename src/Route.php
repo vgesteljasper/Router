@@ -16,6 +16,11 @@ class Route
   // public $middleware;
 
   /**
+   * @var string
+   */
+  public $name;
+
+  /**
    * @var \VanGestelJasper\Router\Request\Request
    */
   public $request;
@@ -35,6 +40,7 @@ class Route
       'parameterKeys' => $parameterKeys,
     ];
     $this->handler = $handler;
+    $this->name = null;
     // $this->middleware = [];
   }
 
@@ -60,6 +66,17 @@ class Route
     unset($mock->temp);
 
     return $mock;
+  }
+
+  /**
+   * Method to set the name of the route.
+   * @param string $name
+   * @return \VanGestelJasper\Router\Route
+   */
+  public function name($name): Route
+  {
+    $this->name = $name;
+    return $this;
   }
 
 }

@@ -219,7 +219,7 @@ class Router
 
     // replace the parameters on the $route array with the updated ones
     foreach($parameters as $key => $value) {
-      $this->request->payload->add($key, $value);
+      $this->request->payload->set($key, $value);
     }
   }
 
