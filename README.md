@@ -31,7 +31,9 @@ $router = new Router;
 // Add routes
 $router->get('/', 'PageController@index');
 $router->get('/projects/{slug}', function($route) { /* ... */ });
-$router->post('/uploads', 'UploadController@create')->use('AuthMiddleware');
+
+// Optional: Add a name to the route. This will be available on the route object.
+$router->post('/uploads', 'UploadController@create')->name('uploads-route');
 
 // Optional: Define a fallback route in case no route matches.
 $router->fallback('ErrorController@NoMatch');
