@@ -89,8 +89,7 @@ class Router
     // instantiate the handler is it is a class and call the defined method
     if (is_string($route->handler) && strpos($route->handler, '@') !== false) {
       $parts = explode('@', $route->handler);
-      $controller = $parts[0];
-      $method = $parts[1];
+      list($controller, $method) = $parts;
 
       // only run if both the class and method exist
       if (!class_exists($controller) || !method_exists($controller, $method)) {
@@ -129,8 +128,7 @@ class Router
     }
 
     // get the variables from the args array
-    $path = $args[0];
-    $handler = $args[1];
+    list($path, $handler) = $args;
 
     // parse the route and add to routes array
     $route = $this->parseRoute($method, $path, $handler);
