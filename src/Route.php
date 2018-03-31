@@ -10,10 +10,10 @@ class Route
    */
   public $handler;
 
-  /**
-   * @var array
-   */
-  public $middleware;
+  // /**
+  //  * @var array
+  //  */
+  // public $middleware;
 
   /**
    * @var \VanGestelJasper\Router\Request\Request
@@ -35,17 +35,17 @@ class Route
       'parameterKeys' => $parameterKeys,
     ];
     $this->handler = $handler;
-    $this->middleware = [];
+    // $this->middleware = [];
   }
 
-  /**
-   * Trigger defined middleware for Route.
-   * @return void
-   */
-  public function use(): void
-  {
-    $this->middleware = func_get_args();
-  }
+  // /**
+  //  * Trigger defined middleware for Route.
+  //  * @return void
+  //  */
+  // public function use(): void
+  // {
+  //   $this->middleware = func_get_args();
+  // }
 
   /**
    * Use this method to get an empty mock route.

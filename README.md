@@ -8,15 +8,14 @@ If it doesn't match it will return null.
 
 The `Route` instance contains all the data from the request including:
 
+- headers
 - url
 - path
 - method
-- headers
 - query
 - payload
 
-As well as the names of the controller and possible middleware you define for that route.
-This way you can call the required actions based on the matched route.
+..., as well as the handler you set for it.
 
 **_Note:_** This little library is still in a very early stage.
 
@@ -26,26 +25,36 @@ example:
 ```php
 use \VanGestelJasper\Router\Router;
 
-// url is localhost:5000/projects/test?page=1
-
+// instantiate the router
 $router = new Router;
 
+// Add routes
 $router->get('/', 'PageController@index');
-$router->get('/projects/{slug}', 'ProjectController@show')->use('ProjectMiddleware');
+$router->get('/projects/{slug}', function($route) { /* ... */ });
 $router->post('/uploads', 'UploadController@create')->use('AuthMiddleware');
 
+// Optional: Define a fallback route in case no route matches.
+$router->fallback('ErrorController@NoMatch');
+
+// Returns the matched route or null
+// You can modify the route however you want
 $route = $router->dispatch();
 
-print_r($route);
+// Optional: If you just need the matched route object, then you don't need this next method.
+
+// This will trigger the matched route handler for you.
+// If there was no matching route, the fallback route will be used if you defined it.
+// The route handler will be called with the $route as parameter.
+// The return value of Router->run() is a `true` if a handler got triggered, `false` if not.
+$ran = $router->run();
+
 ```
 
-Result:
+An example return value of `$router->dispatch()` of the example above in case
+the url was `localhost:5000/projects/test?page=1`:
 ```
 VanGestelJasper\Router\Route Object (
     [handler] => ProjectController@show
-    [middleware] => Array (
-        [0] => ProjectMiddleware
-    )
     [request] => VanGestelJasper\Router\Request Object (
         [headers] => Array (
             [cache-control] => no-cache
@@ -67,15 +76,43 @@ VanGestelJasper\Router\Route Object (
 )
 ```
 
-If the route doesn't match, the return value of `VanGestelJasper\Router\Router->dispatch()` will be null;
+As you can see in the example, you can either provide a function callback or a
+string in the form of `Class@method`.
+`VanGestelJasper\Router\Router->dispatch()` will always trigger the handler with
+the matched route as it's first parameter.
+
+See the example below.
+```php
+class RouteHandler {
+    /**
+     * @param VanGestelJasper\Router\Route $route
+     */
+    public function handle($route)
+    {
+        /* ... */
+    }
+}
+
+$router = new VanGestelJasper\Router\Router;
+
+$router->get('/foo', 'RouteHandler@handle');
+$router->get('/bar', function($route) {
+    /* ... */
+});
+
+$router->dispatch();
+$router->run();
+```
 
 ### Request data
 
-The request data will be read as JSON. If it succeeds, you will be able to access on the `Route` -> `Request` -> `Payload` object.
+The request data will be read as JSON. If it succeeds, you will be able to
+access on the `Route` -> `Request` -> `Payload` object.
 
 See the example result below.
 
-**_Note:_** The wildcards defined in routes between `{` and `}` will be accessable on the `Route` -> `Request` -> `Payload` object as well.
+**_Note:_** The wildcards defined in routes between `{` and `}` will be
+accessable on the `Route` -> `Request` -> `Payload` object as well.
 
 example:
 ```php
