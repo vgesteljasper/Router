@@ -1,6 +1,6 @@
 <?php namespace VanGestelJasper\Router;
 
-use \VanGestelJasper\Router\Request\Request;
+use VanGestelJasper\Router\Request\Request;
 
 class Router
 {
@@ -14,6 +14,11 @@ class Router
    * @var \VanGestelJasper\Router\Route|null The matched route.
    */
   public $route;
+
+  /**
+   * @var mixed<Closure|string> fallback route handler.
+   */
+  public $fallbackHandler;
 
   /**
    * @var array|null An array of wildcards from the matching route path.
@@ -55,6 +60,51 @@ class Router
   }
 
   /**
+   * Call the route handler if it is a Closure or a string of type "controller @ method"
+   * @return bool True if a route got handled, false if not.
+   */
+  public function run(): bool
+  {
+    $route = null;
+    
+    // if there is no matching route and no fallback route
+    if (!$this->route) {
+      if (!$this->fallbackHandler) {
+        return false;
+      }
+
+      // generate a mock route to bind to the fallback route handler
+      $route = Route::mock($this->fallbackHandler, $this->request);
+    } else {
+      $route = $this->route;
+    }
+
+    // call the handler is it is a closure
+    if ($route->handler instanceof \Closure) {
+      // $route->handler->call($route);
+      ($route->handler)($route);
+      return true;
+    }
+
+    // instantiate the handler is it is a class and call the defined method
+    if (is_string($route->handler) && strpos($route->handler, '@') !== false) {
+      $parts = explode('@', $route->handler);
+      $controller = $parts[0];
+      $method = $parts[1];
+
+      // only run if both the class and method exist
+      if (!class_exists($controller) || !method_exists($controller, $method)) {
+        return false;
+      }
+
+      (new $controller)->$method($route);
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
    * PHP magic function for catching Router methods like "get", "post", etc.
    * @internal
    * @param string $method
@@ -63,9 +113,18 @@ class Router
    */
   public function __call(string $method, array $args): ?Route
   {
+    if ($method === "fallback") {
+      if (count($args) >= 1) {
+        $this->fallbackHandler = $args[0];
+      }
+    }
     // return if the method is not a valid route method
     $validRouteMethods = ['get', 'post', 'put', 'patch', 'delete', 'options'];
     if (!in_array($method, $validRouteMethods, true)) {
+      return null;
+    }
+
+    if (count($args) < 2) {
       return null;
     }
 

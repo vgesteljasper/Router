@@ -1,5 +1,7 @@
 <?php namespace VanGestelJasper\Router;
 
+use VanGestelJasper\Router\Request\request;
+
 class Route
 {
 
@@ -23,9 +25,9 @@ class Route
    * @param string $path
    * @param string $method
    * @param array $parameterKeys
-   * @param string $handler
+   * @param mixed<Closure|string> $handler
    */
-  public function __construct(string $path, string $method, array $parameterKeys, string $handler)
+  public function __construct(string $path, string $method, array $parameterKeys, $handler)
   {
     $this->temp = [
       'path' => $path,
@@ -43,6 +45,21 @@ class Route
   public function use(): void
   {
     $this->middleware = func_get_args();
+  }
+
+  /**
+   * Use this method to get an empty mock route.
+   * @param mixed<Closure|string> $handler
+   * @param \VanGestelJasper\Router\Request\Request
+   * @return \VanGestelJasper\Router\Route
+   */
+  public static function mock($handler, Request $request): Route
+  {
+    $mock = new self('', '', [], $handler);
+    $mock->request = $request;
+    unset($mock->temp);
+
+    return $mock;
   }
 
 }

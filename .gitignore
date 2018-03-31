@@ -11,3 +11,4 @@ composer.lock
 # library
 /cache
 /docs
+test.php
