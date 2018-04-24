@@ -8,20 +8,21 @@ If it doesn't match it will return null.
 
 The `Route` instance contains all the data from the request including:
 
-- headers
-- url
-- path
-- method
-- query
-- payload
+* headers
+* url
+* path
+* method
+* query
+* payload
 
-..., as well as the handler you set for it.
+..., as well as the handler, name and middleware you set for it.
 
 **_Note:_** This little library is still in a very early stage.
 
 ## Usage
 
 example:
+
 ```php
 use \VanGestelJasper\Router\Router;
 
@@ -32,8 +33,19 @@ $router = new Router;
 $router->get('/', 'PageController@index');
 $router->get('/projects/{slug}', function($route) { /* ... */ });
 
-// Optional: Add a name to the route. This will be available on the route object.
-$router->post('/uploads', 'UploadController@create')->name('uploads-route');
+// Optional: Add a name to the route. This name will be available on the route object.
+$router
+    ->post('/uploads', 'UploadController@create')
+    ->name('uploads-route')
+    ->use('UploadMiddleware');
+// The `use` method is for running middleware before the route handler is called.
+// You can chain `use` calls like `->use('...')->use('...');` to add multiple.
+// The router will call the `run` method on the class you provide.
+// If `run` returns true, the next middleware will be called or the route handler
+// when there is no further middleware.
+// You can do anything to the $route object inside the middleware.
+// Returning anything else then true will stop the router.
+// You should handle termination yourself.
 
 // Optional: Define a fallback route in case no route matches.
 $router->fallback('ErrorController@NoMatch');
@@ -49,14 +61,39 @@ $route = $router->dispatch();
 // The route handler will be called with the $route as parameter.
 // The return value of Router->run() is a `true` if a handler got triggered, `false` if not.
 $ran = $router->run();
-
 ```
+
+middleware example:
+
+```php
+class UploadMiddleware {
+
+    /**
+     * Run middleware.
+     * @param \VanGestelJasper\Router\Route $route
+     * @return bool $next
+     */
+    public function run($route): bool
+    {
+        // manipulate the $route here
+        // or anything else oyu need to do
+
+        return true // go to next middleware or run route handler
+        return false // stop the router
+    }
+}
+```
+
+Note: It is currently not supported to run middleware as a closure like you
+can with route handlers.
 
 An example return value of `$router->dispatch()` of the example above in case
 the url was `localhost:5000/projects/test?page=1`:
+
 ```
 VanGestelJasper\Router\Route Object (
     [handler] => ProjectController@show
+    [name] => The route name
     [request] => VanGestelJasper\Router\Request Object (
         [headers] => Array (
             [cache-control] => no-cache
@@ -75,6 +112,7 @@ VanGestelJasper\Router\Route Object (
             [slug] => test
         )
     )
+    [middleware] => Array ()
 )
 ```
 
@@ -84,6 +122,7 @@ string in the form of `Class@method`.
 the matched route as it's first parameter.
 
 See the example below.
+
 ```php
 class RouteHandler {
     /**
@@ -117,6 +156,7 @@ See the example result below.
 accessable on the `Route` -> `Request` -> `Payload` object as well.
 
 example:
+
 ```php
 $router = new VanGestelJasper\Router\Router;
 $route->post('/projects/{slug}', 'ProjectController@create');
@@ -131,6 +171,7 @@ print_r($route);
 //     "subtitle": "Router"
 // }
 ```
+
 ```
 VanGestelJasper\Router\Route Object (
     [request] => VanGestelJasper\Router\Request Object (

@@ -31,12 +31,31 @@ class Router
   public $request;
 
   /**
-   * Router constructor.
+   * @var string The prefix for controllers
    */
-  public function __construct()
+  private $controllerNamespace;
+
+  /**
+   * @var string The prefix for middleware
+   */
+  private $middlewareNamespace;
+
+  /**
+   * Router constructor.
+   * @param array $settings
+   */
+  public function __construct(array $settings)
   {
     $this->routes = [];
     $this->request = new Request;
+
+    if (array_key_exists('controllerNamespace', $settings)) {
+      $this->controllerNamespace = $settings['controllerNamespace'];
+    }
+
+    if (array_key_exists('middlewareNamespace', $settings)) {
+      $this->middlewareNamespace = $settings['middlewareNamespace'];
+    }
   }
 
   /**
@@ -74,33 +93,63 @@ class Router
       }
 
       // generate a mock route to bind to the fallback route handler
+      // because there is not actually a route in this case
       $route = Route::mock($this->fallbackHandler, $this->request);
     } else {
       $route = $this->route;
     }
 
+    foreach($route->middleware as $middleware) {
+      list($handled, $response) = $this->callUserHandler(
+          $middleware.'@run', $this->middlewareNamespace, [$route] );
+
+      // if the response of the middleware was not true, return false
+      if ($response !== true) {
+        return false;
+      }
+    }
+
+    // call the user handler
+    list($handled, $response) = $this->callUserHandler(
+      $route->handler, $this->controllerNamespace, [$route] );
+
+    return $handled;
+  }
+
+  /**
+   * Call a handler specified by the user.
+   * @internal
+   * @param mixed $handler
+   * @param string $prefix | The prefix for classes
+   * @param array $parameters
+   * @return array | Containing the status
+   */
+  private function callUserHandler($handler, string $prefix = null, $parameters = []): array
+  {
+    // the response of the handler
+    $response = null;
+
     // call the handler is it is a closure
-    if ($route->handler instanceof \Closure) {
-      // $route->handler->call($route);
-      ($route->handler)($route);
-      return true;
+    if ($handler instanceof \Closure) {
+      $response = ($handler)(...$parameters);
+      return [true, $response];
     }
 
     // instantiate the handler is it is a class and call the defined method
-    if (is_string($route->handler) && strpos($route->handler, '@') !== false) {
-      $parts = explode('@', $route->handler);
-      list($controller, $method) = $parts;
+    if (is_string($handler) && strpos($handler, '@') !== false) {
+      $parts = explode('@', $handler);
+      list($class, $method) = $parts;
 
-      // only run if both the class and method exist
-      if (!class_exists($controller) || !method_exists($controller, $method)) {
-        return false;
+      // prefix the class
+      if ($prefix) {
+        $class = $prefix.'\\'.$class;
       }
 
-      (new $controller)->$method($route);
-      return true;
+      $response = (new $class)->$method(...$parameters);
+      return [true, $response];
     }
 
-    return false;
+    return [false, $response];
   }
 
   /**
@@ -117,8 +166,9 @@ class Router
         $this->fallbackHandler = $args[0];
       }
     }
+
     // return if the method is not a valid route method
-    $validRouteMethods = ['get', 'post', 'put', 'patch', 'delete', 'options'];
+    $validRouteMethods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'];
     if (!in_array($method, $validRouteMethods, true)) {
       return null;
     }

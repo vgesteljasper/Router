@@ -26,6 +26,11 @@ class Route
   public $request;
 
   /**
+   * @var array
+   */
+  public $middleware;
+
+  /**
    * Route constructor.
    * @param string $path
    * @param string $method
@@ -41,17 +46,19 @@ class Route
     ];
     $this->handler = $handler;
     $this->name = null;
-    // $this->middleware = [];
+    $this->middleware = [];
   }
 
-  // /**
-  //  * Trigger defined middleware for Route.
-  //  * @return void
-  //  */
-  // public function use(): void
-  // {
-  //   $this->middleware = func_get_args();
-  // }
+  /**
+   * Trigger defined middleware for Route.
+   * @param string $middleware
+   * @return \VanGestelJasper\Router\Route
+   */
+  public function use(string $middleware): Route
+  {
+    $this->middleware[] = $middleware;
+    return $this;
+  }
 
   /**
    * Use this method to get an empty mock route.
