@@ -61,6 +61,17 @@ class Route
   }
 
   /**
+   * Method to set the name of the route.
+   * @param string $name
+   * @return \VanGestelJasper\Router\Route
+   */
+  public function name($name): Route
+  {
+    $this->name = $name;
+    return $this;
+  }
+
+  /**
    * Use this method to get an empty mock route.
    * @param mixed<Closure|string> $handler
    * @param \VanGestelJasper\Router\Request\Request
@@ -73,17 +84,6 @@ class Route
     unset($mock->temp);
 
     return $mock;
-  }
-
-  /**
-   * Method to set the name of the route.
-   * @param string $name
-   * @return \VanGestelJasper\Router\Route
-   */
-  public function name($name): Route
-  {
-    $this->name = $name;
-    return $this;
   }
 
 }

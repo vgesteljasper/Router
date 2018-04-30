@@ -141,7 +141,8 @@ class Router
       list($class, $method) = $parts;
 
       // prefix the class
-      if ($prefix) {
+      // only when it doesn't start with a '*' character.
+      if ($prefix && strpos($class, '*') !== 0) {
         $class = $prefix.'\\'.$class;
       }
 
