@@ -1,6 +1,6 @@
-<?php namespace VanGestelJasper\Router;
+<?php namespace vjee\Router;
 
-use VanGestelJasper\Router\Request\request;
+use vjee\Router\Request\request;
 
 class Route
 {
@@ -21,7 +21,7 @@ class Route
   public $name;
 
   /**
-   * @var \VanGestelJasper\Router\Request\Request
+   * @var vjee\Router\Request\Request
    */
   public $request;
 
@@ -52,7 +52,7 @@ class Route
   /**
    * Trigger defined middleware for Route.
    * @param string $middleware
-   * @return \VanGestelJasper\Router\Route
+   * @return vjee\Router\Route
    */
   public function use(string $middleware): Route
   {
@@ -63,7 +63,7 @@ class Route
   /**
    * Method to set the name of the route.
    * @param string $name
-   * @return \VanGestelJasper\Router\Route
+   * @return vjee\Router\Route
    */
   public function name($name): Route
   {
@@ -74,8 +74,8 @@ class Route
   /**
    * Use this method to get an empty mock route.
    * @param mixed<Closure|string> $handler
-   * @param \VanGestelJasper\Router\Request\Request
-   * @return \VanGestelJasper\Router\Route
+   * @param vjee\Router\Request\Request
+   * @return vjee\Router\Route
    */
   public static function mock($handler, Request $request): Route
   {

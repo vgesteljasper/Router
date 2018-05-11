@@ -1,6 +1,6 @@
-<?php namespace VanGestelJasper\Router\Request;
+<?php namespace vjee\Router\Request;
 
-use \VanGestelJasper\Collection\Collection;
+use vjee\Collection\Collection;
 
 class Headers extends Collection
 {

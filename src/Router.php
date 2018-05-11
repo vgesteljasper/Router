@@ -1,17 +1,17 @@
-<?php namespace VanGestelJasper\Router;
+<?php namespace vjee\Router;
 
-use VanGestelJasper\Router\Request\Request;
+use vjee\Router\Request\Request;
 
 class Router
 {
 
   /**
-   * @var \VanGestelJasper\Router\Route[]
+   * @var vjee\Router\Route[]
    */
   public $routes;
 
   /**
-   * @var \VanGestelJasper\Router\Route|null The matched route.
+   * @var vjee\Router\Route|null The matched route.
    */
   public $route;
 
@@ -26,7 +26,7 @@ class Router
   public $matches;
 
   /**
-   * @var \VanGestelJasper\Router\Request\Request
+   * @var vjee\Router\Request\Request
    */
   public $request;
 
@@ -60,7 +60,7 @@ class Router
 
   /**
    * Dispatch the router.
-   * @return \VanGestelJasper\Router\Route|null
+   * @return vjee\Router\Route|null
    */
   public function dispatch(): ?Route
   {
@@ -158,7 +158,7 @@ class Router
    * @internal
    * @param string $method
    * @param array $args
-   * @return \VanGestelJasper\Router\Route|null
+   * @return vjee\Router\Route|null
    */
   public function __call(string $method, array $args): ?Route
   {
@@ -193,7 +193,7 @@ class Router
    * @param string $method
    * @param string $path
    * @param string $handler
-   * @return \VanGestelJasper\Router\Route
+   * @return vjee\Router\Route
    */
   public function parseRoute($method, $path, $handler): Route
   {
@@ -279,7 +279,7 @@ class Router
    * If it does, return the matches from the Route path wildcards.
    * Else return null.
    * @internal
-   * @param \VanGestelJasper\Router\Route $route
+   * @param vjee\Router\Route $route
    * @return array|null
    */
   public function routeMatches(Route $route): ?array

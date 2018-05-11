@@ -1,6 +1,6 @@
-<?php namespace VanGestelJasper\Router\Request;
+<?php namespace vjee\Router\Request;
 
-use \VanGestelJasper\Collection\Collection;
+use vjee\Collection\Collection;
 
 class Request extends Collection
 {
@@ -21,17 +21,17 @@ class Request extends Collection
   public $method;
 
   /**
-   * @var \VanGestelJasper\Router\Request\Headers
+   * @var vjee\Router\Request\Headers
    */
   public $headers;
 
   /**
-   * @var \VanGestelJasper\Router\Request\Query
+   * @var vjee\Router\Request\Query
    */
   public $query;
 
   /**
-   * @var \VanGestelJasper\Router\Request\Payload
+   * @var vjee\Router\Request\Payload
    */
   public $payload;
 

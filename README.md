@@ -1,9 +1,9 @@
-# VanGestelJasper\Router
+# vjee\Router
 
 Very simple URL router for just about anything.
 
 It will match the current request against a set of predefined routes.
-If there is a match, it will return a `VanGestelJasper\Router\Route` instance.
+If there is a match, it will return a `vjee\Router\Route` instance.
 If it doesn't match it will return null.
 
 The `Route` instance contains all the data from the request including:
@@ -24,7 +24,7 @@ The `Route` instance contains all the data from the request including:
 example:
 
 ```php
-use \VanGestelJasper\Router\Router;
+use vjee\Router\Router;
 
 // instantiate the router
 $router = new Router;
@@ -70,7 +70,7 @@ class UploadMiddleware {
 
     /**
      * Run middleware.
-     * @param \VanGestelJasper\Router\Route $route
+     * @param vjee\Router\Route $route
      * @return bool $next
      */
     public function run($route): bool
@@ -91,10 +91,10 @@ An example return value of `$router->dispatch()` of the example above in case
 the url was `localhost:5000/projects/test?page=1`:
 
 ```
-VanGestelJasper\Router\Route Object (
+vjee\Router\Route Object (
     [handler] => ProjectController@show
     [name] => The route name
-    [request] => VanGestelJasper\Router\Request Object (
+    [request] => vjee\Router\Request Object (
         [headers] => Array (
             [cache-control] => no-cache
             [Accept] => */*
@@ -105,10 +105,10 @@ VanGestelJasper\Router\Route Object (
         [url] => https://localhost:5000/projects/jasper
         [path] => /projects/test
         [method] => GET
-        [query] => VanGestelJasper\Router\Query Object (
+        [query] => vjee\Router\Query Object (
             [page] => 1
         )
-        [payload] => VanGestelJasper\Router\Payload Object (
+        [payload] => vjee\Router\Payload Object (
             [slug] => test
         )
     )
@@ -118,7 +118,7 @@ VanGestelJasper\Router\Route Object (
 
 As you can see in the example, you can either provide a function callback or a
 string in the form of `Class@method`.
-`VanGestelJasper\Router\Router->dispatch()` will always trigger the handler with
+`vjee\Router\Router->dispatch()` will always trigger the handler with
 the matched route as it's first parameter.
 
 See the example below.
@@ -126,7 +126,7 @@ See the example below.
 ```php
 class RouteHandler {
     /**
-     * @param VanGestelJasper\Router\Route $route
+     * @param vjee\Router\Route $route
      */
     public function handle($route)
     {
@@ -134,7 +134,7 @@ class RouteHandler {
     }
 }
 
-$router = new VanGestelJasper\Router\Router;
+$router = new vjee\Router\Router;
 
 $router->get('/foo', 'RouteHandler@handle');
 $router->get('/bar', function($route) {
@@ -158,7 +158,7 @@ accessable on the `Route` -> `Request` -> `Payload` object as well.
 example:
 
 ```php
-$router = new VanGestelJasper\Router\Router;
+$router = new vjee\Router\Router;
 $route->post('/projects/{slug}', 'ProjectController@create');
 $route = $router->dispatch();
 
@@ -173,9 +173,9 @@ print_r($route);
 ```
 
 ```
-VanGestelJasper\Router\Route Object (
-    [request] => VanGestelJasper\Router\Request Object (
-        [payload] => VanGestelJasper\Router\Payload Object (
+vjee\Router\Route Object (
+    [request] => vjee\Router\Request Object (
+        [payload] => vjee\Router\Payload Object (
             [slug] => test
             [title] => PHP
             [subtitle] => Router
