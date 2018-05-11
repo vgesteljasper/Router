@@ -1,5 +1,5 @@
 {
-  "name": "vangesteljasper/router",
+  "name": "vjee/router",
   "description": "Very simple router for just about anything.",
   "license": "MIT",
   "keywords": [
@@ -12,14 +12,14 @@
     }
   ],
   "require": {
-    "vangesteljasper/collection": "dev-master"
+    "vjee/collection": "dev-master"
   },
   "require-dev": {
     "ducks-project/apache": "^1.0"
   },
   "autoload": {
     "psr-4": {
-      "VanGestelJasper\\Router\\": "src"
+      "vjee\\Router\\": "src"
     }
   },
   "minimum-stability": "dev"
